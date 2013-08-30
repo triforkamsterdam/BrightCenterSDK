@@ -2,6 +2,7 @@
 @class BCUserAccount;
 @class BCAssessmentItemResult;
 @class BCAssessment;
+@class BCStudent;
 
 @interface BCStudentsRepository : NSObject
 
