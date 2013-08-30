@@ -12,7 +12,7 @@ Install cocoapods
 See also: http://cocoapods.org
 
 
-## To integrate this SDK in your educational app
+## To integrate this SDK into your educational app
 
 Go to your XCode project directory and create a text file called `PodFile` with the following contents:
 
