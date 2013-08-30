@@ -1,0 +1,3 @@
+@interface BCDisclosureIndicator : UIView
+
+@end
