@@ -33,6 +33,8 @@ studentPickerController.studentPickerDelegate = self;
 [self presentViewController:studentPickerController animated:YES completion:nil];
 ```
 
+NOTE: When asked for a username and password, use "leraar" and leave the password field empty.
+
 As you can see it assigns the controller (self) as the delegate. For this to work you have to conform to the `BCStudentPickerControllerDelegate` protocol as follows:
 
 ```objective-c
