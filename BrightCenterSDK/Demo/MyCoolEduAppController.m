@@ -3,6 +3,7 @@
 #import "BCGroup.h"
 #import "BCAssessment.h"
 #import "BCStudentsRepository.h"
+#import "BCAssessmentItemResult.h"
 
 #define TITLE_HEIGHT 50.0
 #define VERTICAL_MARGIN 30.0
@@ -51,6 +52,45 @@
     [loginButton addTarget:self action:@selector(loginButtonTapped) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void) saveAssessmentItemResultExample {
+    BCStudentsRepository *repository = [BCStudentsRepository instance];
+    BCAssessmentItemResult *result = [BCAssessmentItemResult new];
+    result.student = self.student;
+    result.questionId = @"123";
+    result.assessment = [BCAssessment assessmentWithId:@"456"];
+    result.attempts = 2;
+    result.duration = 5;
+    result.completionStatus = BCCompletionStatusCompleted;
+    result.score = 10;
+
+    // Saving an assessment makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
+    [repository saveAssessmentItemResult:result success:^{
+        // Saving the assessment item was successful!
+        // At this point you can hide the progress indicator.
+    } failure:^(NSError *error, BOOL loginFailure) {
+        // Saving the result failed. This could happen when:
+        // 1) the given credentials are no longer valid or
+        // 2) there was a network error
+    }];
+}
+
+- (void) loadAssessmentItemsExample {
+    BCStudentsRepository *repository = [BCStudentsRepository instance];
+
+    // Loading the registered results makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
+    [repository loadAssessmentItemResults:[BCAssessment assessmentWithId:@"456"]
+                                  student:self.student
+                                  success:^(NSArray *assessmentItemResults) {
+                                      // Given is an NSArray of BCAssessmentItemResults, do with it whatever you like
+                                      // At this point you can hide the progress indicator.
+                                  }
+                                  failure:^(NSError *error, BOOL loginFailure) {
+                                      // Saving the result failed. This could happen when:
+                                      // 1) the given credentials are no longer valid or
+                                      // 2) there was a network error
+                                  }];
+}
+
 - (void) loginButtonTapped {
     studentPickerController = [BCStudentPickerController new];
     studentPickerController.studentPickerDelegate = self;
@@ -85,7 +125,7 @@
 
 #pragma mark - BCStudentPickerControllerDelegate implementation
 
-- (void) studentPicked:(BCStudent *)     student {
+- (void) studentPicked:(BCStudent *) student {
     self.student = student;
     loggedInStudentLabel.text = [NSString stringWithFormat:@"%@ (%@)", student.name, student.group.name];
     [loginButton setTitle:@"Change" forState:UIControlStateNormal];
