@@ -1,5 +1,6 @@
 #import "BCAssessmentItemResult.h"
 #import "BCStudent.h"
+#import "BCAssessment.h"
 
 @implementation BCAssessmentItemResult
 

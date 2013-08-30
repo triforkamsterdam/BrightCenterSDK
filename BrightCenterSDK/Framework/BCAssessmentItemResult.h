@@ -1,4 +1,5 @@
 @class BCStudent;
+@class BCAssessment;
 
 typedef enum {
     BCCompletionStatusCompleted,
@@ -9,6 +10,7 @@ typedef enum {
 
 @interface BCAssessmentItemResult : NSObject
 
+@property (nonatomic, strong) BCAssessment *assessment;
 @property (nonatomic, strong) BCStudent *student;
 @property (nonatomic, copy) NSString *questionId;
 

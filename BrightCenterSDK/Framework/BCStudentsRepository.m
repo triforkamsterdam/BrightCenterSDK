@@ -140,7 +140,7 @@
     });
 }
 
-- (void) loadAssessmentItemResults:(void (^)(NSArray *assessmentItemResults)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
+- (void) loadAssessmentItemResults:(BCAssessment *) assessment student:(BCStudent *) student success:(void (^)(NSArray *assessmentItemResults)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     if (![self repositoryIsFullyConfigured]) {
         return;
     }
@@ -171,11 +171,6 @@
 - (BOOL) repositoryIsFullyConfigured {
     if (!self.credentials) {
         NSLog(@"ERROR: Missing credentials. Did you log in first?");
-        return NO;
-    }
-    if (!self.assessment) {
-        NSLog(@"ERROR: BCStudentsRepository is not properly initialized. Make sure to configure the 'assessment' as "
-                "follows: [BCStudentsRepository instance].assessment = [BCAssessment assessmentWithId:@\"abc123\"]");
         return NO;
     }
     return YES;

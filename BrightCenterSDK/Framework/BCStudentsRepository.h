@@ -6,7 +6,6 @@
 @interface BCStudentsRepository : NSObject
 
 @property(nonatomic, strong) BCCredentials *credentials;
-@property(nonatomic, strong) BCAssessment *assessment;
 
 + (BCStudentsRepository *) instance;
 
@@ -16,6 +15,6 @@
 
 - (void) saveAssessmentItemResult:(BCAssessmentItemResult *) result success:(void (^)()) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure;
 
-- (void) loadAssessmentItemResults:(void (^)(NSArray *assessmentItemResults)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure;
+- (void) loadAssessmentItemResults:(BCAssessment *) assessment student:(BCStudent *) student success:(void (^)(NSArray *assessmentItemResults)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure;
 
 @end
