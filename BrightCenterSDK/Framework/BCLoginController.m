@@ -27,10 +27,9 @@
 }
 
 - (void) viewDidLoad {
-    // TODO: Enable for iOS 7 support (needs to be disabled right now or else Cocoapods does not accept our build)
-//    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
-//        self.edgesForExtendedLayout = UIRectEdgeNone;
-//    }
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     repository = [BCStudentsRepository instance];
 
     self.view.backgroundColor = [UIColor colorWithRed:79 / 255.0 green:79 / 255.0 blue:79 / 255.0 alpha:1.0];
