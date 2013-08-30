@@ -49,8 +49,6 @@
     loginButton.titleLabel.font = [UIFont systemFontOfSize:30.0];
 
     [loginButton addTarget:self action:@selector(loginButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-
-    [BCStudentsRepository instance].assessment = [BCAssessment assessmentWithId:@"abc123"];
 }
 
 - (void) loginButtonTapped {

@@ -1,6 +1,7 @@
 #import "BCNavigationBar.h"
 #import "BCUserAccount.h"
 #import "BCLoggedInUserView.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define HORIZONTAL_MARGIN 30.0
 
