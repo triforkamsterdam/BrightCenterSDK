@@ -6,12 +6,9 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/triforksysadmin/BrightCenterSDK"
   s.license      = { :type => 'Apache License, Version 2.0', :file => 'LICENSE' }
-
-
   s.author       = { "Tom van Zummeren" => "tom.vanzummeren@trifork.nl" }
 
-  s.platform     = :ios, '7.0'
-  s.ios.deployment_target = '5.0'
+  s.platform     = :ios, '5.0'
 
   s.source       = { :git => "https://github.com/triforksysadmin/BrightCenterSDK.git", :tag => "1.0.0" }
   s.ios.frameworks = 'CoreGraphics','QuartzCore'
