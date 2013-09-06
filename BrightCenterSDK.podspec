@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "BrightCenterSDK"
-  s.version      = "1.0.0"
+  s.version      = "1.1.0"
   s.summary      = "SDK to integrate to the Bright Center backend for educational apps."
 
   s.homepage     = "https://github.com/triforksysadmin/BrightCenterSDK"
@@ -10,12 +10,12 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, '5.0'
 
-  s.source       = { :git => "https://github.com/triforksysadmin/BrightCenterSDK.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/triforksysadmin/BrightCenterSDK.git", :tag => "1.1.0" }
   s.ios.frameworks = 'CoreGraphics','QuartzCore'
 
   s.source_files  = 'BrightCenterSDK/Framework/**/*.{h,m}'
 
-  s.resources = "BrightCenterSDK/Framework/**/*.png"
+  s.resources = "BrightCenterSDK/Resources/**/*.png"
 
   s.requires_arc = true
 
