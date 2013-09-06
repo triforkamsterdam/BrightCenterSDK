@@ -5,8 +5,10 @@
 #import "BCCredentials.h"
 #import "BCAssessmentItemResult.h"
 #import "BCAssessment.h"
+#import "AFHTTPClient.h"
+#import "AFJSONRequestOperation.h"
 
-#define SANDBOX_URL @"http://tst-brightcenter.trifork.nl/"
+#define SANDBOX_URL @"https://tst-brightcenter.trifork.nl"
 //#define PRODUCTION_URL @"does not exist yet"
 
 @implementation BCStudentsRepository {
@@ -14,7 +16,7 @@
     // TODO: Remove this array when assessment item results are stored in the backend
     NSMutableArray *savedAssessmentItemResults;
 
-    NSString *baseUrl;
+    AFHTTPClient *client;
 }
 
 + (BCStudentsRepository *) instance {
@@ -28,68 +30,60 @@
     return _instance;
 }
 
+- (void) setCredentials:(BCCredentials *) credentials {
+    _credentials = credentials;
+    [client setAuthorizationHeaderWithUsername:credentials.username password:credentials.password];
+}
+
 - (void) configureForSandbox {
-    baseUrl = SANDBOX_URL;
+    [self configureClientWithBaseUrl:SANDBOX_URL];
+}
+
+//- (void) configureForProduction {
+//    [self configureClientWithBaseUrl:PRODUCTION_URL];
+//}
+
+- (void) configureClientWithBaseUrl:(NSString *) baseUrl {
+    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:baseUrl]];
 }
 
 - (id) init {
     self = [super init];
     if (self) {
         savedAssessmentItemResults = [NSMutableArray new];
-        baseUrl = SANDBOX_URL;
+        // TODO: When production server is ready, change this default to configureForProduction.
+        [self configureForSandbox];
     }
     return self;
 }
 
 - (void) loadGroupsAndStudents:(void (^)(NSArray *groups)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
-    if (![self repositoryIsFullyConfigured]) {
-        return;
-    }
+    NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
+                                                    path:@"/groups"
+                                              parameters:nil];
 
-    BCGroup *group1 = [BCGroup groupWithName:@"Groep 4"];
-    group1.students = @[
-            [BCStudent studentWithName:@"Vina Mcintyre"],
-            [BCStudent studentWithName:@"Francisco Brighton"],
-            [BCStudent studentWithName:@"Alethea Goetz"],
-            [BCStudent studentWithName:@"Tomi Odowd"],
-            [BCStudent studentWithName:@"Dollie Demers"],
-            [BCStudent studentWithName:@"Kristy Hodder"],
-            [BCStudent studentWithName:@"Hilaria Berthelot"],
-            [BCStudent studentWithName:@"Roderick Auvil"]
-    ];
+    void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
+        NSArray *groupsJson = json;
+        NSMutableArray *groups = [NSMutableArray new];
+        for (NSDictionary *groupJson in groupsJson) {
+            NSString *id = [groupJson[@"id"] description]; // description converts the value to NSString if necessary
+            NSString *name = groupJson[@"name"];
+            NSString *schoolId = groupJson[@"schoolId"];
+            BCGroup *group = [BCGroup groupWithId:id name:name schoolId:schoolId];
+            [groups addObject:group];
 
-    BCGroup *group2 = [BCGroup groupWithName:@"Groep 5a"];
-    group2.students = @[
-            [BCStudent studentWithName:@"Leerling 1"],
-            [BCStudent studentWithName:@"Leerling 2"],
-            [BCStudent studentWithName:@"Leerling 3"]
-    ];
-
-    BCGroup *group3 = [BCGroup groupWithName:@"Groep 5b"];
-    group3.students = @[
-            [BCStudent studentWithName:@"Leerling 4"],
-            [BCStudent studentWithName:@"Leerling 5"],
-            [BCStudent studentWithName:@"Leerling 6"],
-            [BCStudent studentWithName:@"Leerling 7"]
-    ];
-
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        // TODO: Replace sleep + static data with call to backend
-        [NSThread sleepForTimeInterval:1.0];
-        dispatch_queue_t mainQueue = dispatch_get_main_queue();
-        dispatch_sync(mainQueue, ^{
-            if ([self invalidCredentials]) {
-                if (failure) {
-                    failure(nil, YES);
-                }
-                return;
+            NSArray *studentsJson = groupJson[@"students"];
+            for (NSDictionary *studentJson in studentsJson) {
+                NSString *firstName = studentJson[@"firstName"];
+                NSString *lastName = studentJson[@"lastName"];
+                NSString *studentId = [studentJson[@"studentId"] description]; // description converts the value to NSString if necessary
+                [group addStudent:[BCStudent studentWithId:studentId group:group firstName:firstName lastName:lastName]];
             }
-            if (success) {
-                success(@[group1, group2, group3]);
-            }
-        });
-    });
+        }
+        success(groups);
+    };
+    [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
+                                                     failure:[self createHttpFailureCallback:failure]] start];
 }
 
 - (void) loadUserDetails:(void (^)(BCUserAccount *userAccount)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
@@ -103,7 +97,7 @@
         [NSThread sleepForTimeInterval:1.0];
         dispatch_queue_t mainQueue = dispatch_get_main_queue();
         dispatch_sync(mainQueue, ^{
-            if ([self invalidCredentials]) {
+            if ([self invalidDummyCredentials]) {
                 if (failure) {
                     failure(nil, YES);
                 }
@@ -137,7 +131,7 @@
         [NSThread sleepForTimeInterval:1.0];
         dispatch_queue_t mainQueue = dispatch_get_main_queue();
         dispatch_sync(mainQueue, ^{
-            if ([self invalidCredentials]) {
+            if ([self invalidDummyCredentials]) {
                 if (failure) {
                     failure(nil, YES);
                 }
@@ -160,7 +154,7 @@
         [NSThread sleepForTimeInterval:1.0];
         dispatch_queue_t mainQueue = dispatch_get_main_queue();
         dispatch_sync(mainQueue, ^{
-            if ([self invalidCredentials]) {
+            if ([self invalidDummyCredentials]) {
                 if (failure) {
                     failure(nil, YES);
                 }
@@ -173,17 +167,26 @@
     });
 }
 
-- (BOOL) invalidCredentials {
+- (BOOL) invalidDummyCredentials {
     return ![@"leraar" isEqualToString:self.credentials.username];
 }
 
-// TODO: Move this to the HttpRequest class or whatever class that will make the connection with the backend
 - (BOOL) repositoryIsFullyConfigured {
     if (!self.credentials) {
-        NSLog(@"ERROR: Missing credentials. Did you log in first?");
+        NSLog(@"ERROR: Missing credentials. Did you log in first using BCSTudentPickerController? Set credentials manually setting them: "
+                "[BCStudentsRepository instance].credentials = [BCCredentials credentialsWithUsername:@\"username\" password:@\"password\"]");
         return NO;
     }
     return YES;
+}
+
+- (void (^)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id)) createHttpFailureCallback:(void (^)(NSError *, BOOL)) failure {
+    void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
+        // TODO: Backend should return a 401 status code instead. Remove the "text/html" check once the backend properly responds this way.
+        BOOL loginFailed = [response.allHeaderFields[@"Content-Type"] hasPrefix:@"text/html"] || response.statusCode == 401;
+        failure(error, loginFailed);
+    };
+    return httpFailure;
 }
 
 @end

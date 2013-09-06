@@ -5,29 +5,27 @@
     NSMutableArray *students;
 }
 
-- (id) initWithName:(NSString *) name {
+- (id) initWithId:(NSString *) id name:(NSString *) name schoolId:(NSString *) schoolId {
     self = [super init];
     if (self) {
-        self.name = name;
+        _id = id;
+        _name = name;
+        _schoolId = schoolId;
+        students = [NSMutableArray new];
     }
-
     return self;
 }
 
-+ (id) groupWithName:(NSString *) name {
-    return [[self alloc] initWithName:name];
++ (id) groupWithId:(NSString *) id name:(NSString *) name schoolId:(NSString *) schoolId {
+    return [[self alloc] initWithId:id name:name schoolId:schoolId];
 }
 
 - (NSArray *) students {
     return students;
 }
 
-- (void) setStudents:(NSArray *) theStudents {
-    students = [[NSMutableArray alloc] initWithCapacity:[theStudents count]];
-    for (BCStudent *student in theStudents) {
-        student.group = self;
-        [students addObject:student];
-    }
+- (void) addStudent:(BCStudent *) student {
+    [students addObject:student];
 }
 
 @end

@@ -127,7 +127,7 @@
 
 - (void) studentPicked:(BCStudent *) student {
     self.student = student;
-    loggedInStudentLabel.text = [NSString stringWithFormat:@"%@ (%@)", student.name, student.group.name];
+    loggedInStudentLabel.text = [NSString stringWithFormat:@"%@ (%@)", student.fullName, student.group.name];
     [loginButton setTitle:@"Change" forState:UIControlStateNormal];
 }
 

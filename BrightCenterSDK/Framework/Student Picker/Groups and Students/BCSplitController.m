@@ -16,10 +16,10 @@
 - (id) init {
     self = [super init];
     if (self) {
-       // TODO: Enable for iOS 7 support (needs to be disabled right now or else Cocoapods does not accept our build)
-//        if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
-//            self.edgesForExtendedLayout = UIRectEdgeNone;
-//        }
+        if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+            // 0 == UIRectEdgeNone
+            [self performSelector:@selector(setEdgesForExtendedLayout:) withObject:[NSNumber numberWithInt:0]];
+        }
 
         studentListController = [BCStudentListController new];
         [self embedController:studentListController];

@@ -56,7 +56,7 @@
     }
 
     BCStudent *student = students[(NSUInteger) indexPath.row];
-    cell.textLabel.text = student.name;
+    cell.textLabel.text = student.fullName;
 
     return cell;
 }

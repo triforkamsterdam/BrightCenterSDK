@@ -2,12 +2,17 @@
 
 @interface BCStudent : NSObject
 
-@property(nonatomic, copy) NSString *id;
-@property(nonatomic, strong) BCGroup *group;
-@property(nonatomic, copy) NSString *name;
+@property(readonly) NSString *id;
+@property(readonly) BCGroup *group;
+@property(readonly) NSString *firstName;
+@property(readonly) NSString *lastName;
 
-- (id) initWithName:(NSString *) name;
+// Adds the firstName to the lastName, just for convenience purposes.
+@property(readonly) NSString *fullName;
 
-+ (id) studentWithName:(NSString *) name;
+- (id) initWithId:(NSString *) id group:(BCGroup *) group firstName:(NSString *) firstName lastName:(NSString *) lastName;
+
++ (id) studentWithId:(NSString *) id group:(BCGroup *) group firstName:(NSString *) firstName lastName:(NSString *) lastName;
+
 
 @end
