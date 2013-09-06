@@ -13,9 +13,6 @@
 
 @implementation BCStudentsRepository {
 
-    // TODO: Remove this array when assessment item results are stored in the backend
-    NSMutableArray *savedAssessmentItemResults;
-
     AFHTTPClient *client;
 }
 
@@ -30,32 +27,29 @@
     return _instance;
 }
 
+- (id) init {
+    self = [super init];
+    if (self) {
+        // TODO: When production server is ready, change this default to configureForProduction.
+        [self configureForSandbox];
+        // TODO: Remove this when the backend is repaired and never returns text/plain JSON anymore
+        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"text/plain", nil]];
+    }
+    return self;
+}
+
 - (void) setCredentials:(BCCredentials *) credentials {
     _credentials = credentials;
     [client setAuthorizationHeaderWithUsername:credentials.username password:credentials.password];
 }
 
 - (void) configureForSandbox {
-    [self configureClientWithBaseUrl:SANDBOX_URL];
+    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:SANDBOX_URL]];
 }
 
 //- (void) configureForProduction {
-//    [self configureClientWithBaseUrl:PRODUCTION_URL];
+//    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:PRODUCTION_URL]];
 //}
-
-- (void) configureClientWithBaseUrl:(NSString *) baseUrl {
-    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:baseUrl]];
-}
-
-- (id) init {
-    self = [super init];
-    if (self) {
-        savedAssessmentItemResults = [NSMutableArray new];
-        // TODO: When production server is ready, change this default to configureForProduction.
-        [self configureForSandbox];
-    }
-    return self;
-}
 
 - (void) loadGroupsAndStudents:(void (^)(NSArray *groups)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
@@ -80,7 +74,9 @@
                 [group addStudent:[BCStudent studentWithId:studentId group:group firstName:firstName lastName:lastName]];
             }
         }
-        success(groups);
+        if (success) {
+            success(groups);
+        }
     };
     [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
                                                      failure:[self createHttpFailureCallback:failure]] start];
@@ -110,82 +106,117 @@
                                                     firstName:firstName
                                                      lastName:lastName
                                                          role:role];
-        success(account);
+        if (success) {
+            success(account);
+        }
     };
     [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
                                                      failure:[self createHttpFailureCallback:failure]] start];
 }
 
-- (void) saveAssessmentItemResult:(BCAssessmentItemResult *) result
-                          success:
-                                  (void (^)()) success
-                          failure:
-                                  (void (^)(NSError *error, BOOL loginFailure)) failure {
-    BCAssessmentItemResult *resultToRemove = nil;
-    for (BCAssessmentItemResult *savedResult in savedAssessmentItemResults) {
-        if ([savedResult hasSameQuestionAndStudent:result]) {
-            resultToRemove = savedResult;
+- (void) saveAssessmentItemResult:(BCAssessmentItemResult *) result success:(void (^)()) success
+                          failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
+    if (result.assessment.id.length == 0) {
+        NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: assessment.id cannot be nil");
+        return;
+    }
+    if (result.student.id.length == 0) {
+        NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: student.id cannot be nil");
+        return;
+    }
+
+    NSString *path = [NSString stringWithFormat:@"/assessment/%@/student/%@/assessmentItemResult/%@", result.assessment.id, result.student.id, result.questionId];
+
+    NSString *completionStatusString = @"UNKNOWN";
+    if (result.completionStatus == BCCompletionStatusCompleted) {
+        completionStatusString = @"COMPLETED";
+    } else if (result.completionStatus == BCCompletionStatusIncomplete) {
+        completionStatusString = @"INCOMPLETE";
+    } else if (result.completionStatus == BCCompletionStatusNotAttempted) {
+        completionStatusString = @"NOT_ATTEMPTED";
+    }
+
+    // TODO: Technically this should be a PUT. One problem: the backend ignores the parameters when using PUT... Change this into PUT whenever the backend is ready for it
+    NSURLRequest *urlRequest = [client requestWithMethod:@"POST"
+                                                    path:path
+                                              parameters:@{
+                                                      @"score" : @(result.score),
+                                                      @"duration" : @(result.duration),
+                                                      @"attempts" : @(result.attempts),
+                                                      @"completionStatus" : completionStatusString
+                                              }];
+
+    void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
+        if (success) {
+            success();
         }
-    }
-    if (resultToRemove) {
-        [savedAssessmentItemResults removeObject:resultToRemove];
-    }
-    [savedAssessmentItemResults addObject:result];
+    };
 
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        // TODO: Replace sleep + static data with call to backend
-        [NSThread sleepForTimeInterval:1.0];
-        dispatch_queue_t mainQueue = dispatch_get_main_queue();
-        dispatch_sync(mainQueue, ^{
-            if ([self invalidDummyCredentials]) {
-                if (failure) {
-                    failure(nil, YES);
-                }
-                return;
-            }
-            if (success) {
-                success();
-            }
-        });
-    });
+    [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
+                                                     failure:[self createHttpFailureCallback:failure]] start];
 }
 
-- (void) loadAssessmentItemResults:(BCAssessment *) assessment
-                           student:
-                                   (BCStudent *) student
-                           success:
-                                   (void (^)(NSArray *assessmentItemResults)) success
-                           failure:
-                                   (void (^)(NSError *error, BOOL loginFailure)) failure {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        // TODO: Replace sleep + static data with call to backend
-        [NSThread sleepForTimeInterval:1.0];
-        dispatch_queue_t mainQueue = dispatch_get_main_queue();
-        dispatch_sync(mainQueue, ^{
-            if ([self invalidDummyCredentials]) {
-                if (failure) {
-                    failure(nil, YES);
-                }
-                return;
-            }
-            if (success) {
-                success(savedAssessmentItemResults);
-            }
-        });
-    });
-}
+- (void) loadAssessmentItemResults:(BCAssessment *) assessment student:(BCStudent *) student success:(void (^)(NSArray *assessmentItemResults)) success
+                           failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
+    if (assessment.id.length == 0) {
+        NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: assessment.id cannot be nil");
+        return;
+    }
+    if (student.id.length == 0) {
+        NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: student.id cannot be nil");
+        return;
+    }
+    NSString *path = [NSString stringWithFormat:@"/assessment/%@/students/%@/assessmentItemResult", assessment.id, student.id];
+    NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
+                                                    path:path
+                                              parameters:nil];
 
-- (BOOL) invalidDummyCredentials {
-    return ![@"leraar" isEqualToString:self.credentials.username];
+    void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
+        NSMutableArray *results = [NSMutableArray new];
+        NSArray *resultsJson = json;
+        for (NSDictionary *resultJson in resultsJson) {
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:[resultJson[@"date"] longLongValue] / 1000];
+            NSString *questionId = resultJson[@"questionId"];
+            CGFloat duration = [resultJson[@"duration"] floatValue];
+            NSInteger score = [resultJson[@"score"] intValue];
+            NSInteger attempts = [resultJson[@"attempts"] intValue];
+            NSString *completionStatusString = resultJson[@"completionStatus"];
+            BCCompletionStatus completionStatus = BCCompletionStatusUnknown;
+
+            if ([@"COMPLETED" isEqualToString:completionStatusString]) {
+                completionStatus = BCCompletionStatusCompleted;
+            } else if ([@"INCOMPLETE" isEqualToString:completionStatusString]) {
+                completionStatus = BCCompletionStatusIncomplete;
+            } else if ([@"NOT_ATTEMPTED" isEqualToString:completionStatusString]) {
+                completionStatus = BCCompletionStatusNotAttempted;
+            }
+
+            BCAssessmentItemResult *result = [BCAssessmentItemResult new];
+            result.questionId = questionId;
+            result.attempts = attempts;
+            result.duration = duration;
+            result.score = score;
+            result.completionStatus = completionStatus;
+            result.date = date;
+            [results addObject:result];
+        }
+
+        if (success) {
+            success(results);
+        }
+    };
+    [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
+                                                     failure:[self createHttpFailureCallback:failure]] start];
 }
 
 - (void (^)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id)) createHttpFailureCallback:(void (^)(NSError *, BOOL)) failure {
     void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        // TODO: Backend should return a 401 status code instead. Remove the "text/html" check once the backend properly responds this way.
+        // TODO: Backend should return a 401 status code instead of a redirect. Remove the "text/html" check once the backend properly responds this way.
         BOOL loginFailed = [response.allHeaderFields[@"Content-Type"] hasPrefix:@"text/html"] || response.statusCode == 401;
-        failure(error, loginFailed);
+        NSLog(@"ERROR - BCStudentsRepository: request failed: %@", error);
+        if (failure) {
+            failure(error, loginFailed);
+        }
     };
     return httpFailure;
 }

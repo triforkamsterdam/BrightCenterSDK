@@ -2,16 +2,17 @@
 @class BCAssessment;
 
 typedef enum {
+    BCCompletionStatusUnknown,
     BCCompletionStatusCompleted,
     BCCompletionStatusIncomplete,
-    BCCompletionStatusNotAttempted,
-    BCCompletionStatusUnknown,
+    BCCompletionStatusNotAttempted
 } BCCompletionStatus;
 
 @interface BCAssessmentItemResult : NSObject
 
 @property (nonatomic, strong) BCAssessment *assessment;
 @property (nonatomic, strong) BCStudent *student;
+@property (nonatomic, strong) NSDate *date;
 @property (nonatomic, copy) NSString *questionId;
 
 @property (nonatomic) NSInteger score;

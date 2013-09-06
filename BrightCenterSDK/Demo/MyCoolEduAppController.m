@@ -52,45 +52,6 @@
     [loginButton addTarget:self action:@selector(loginButtonTapped) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void) saveAssessmentItemResultExample {
-    BCStudentsRepository *repository = [BCStudentsRepository instance];
-    BCAssessmentItemResult *result = [BCAssessmentItemResult new];
-    result.student = self.student;
-    result.questionId = @"123";
-    result.assessment = [BCAssessment assessmentWithId:@"456"];
-    result.attempts = 2;
-    result.duration = 5;
-    result.completionStatus = BCCompletionStatusCompleted;
-    result.score = 10;
-
-    // Saving an assessment makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
-    [repository saveAssessmentItemResult:result success:^{
-        // Saving the assessment item was successful!
-        // At this point you can hide the progress indicator.
-    } failure:^(NSError *error, BOOL loginFailure) {
-        // Saving the result failed. This could happen when:
-        // 1) the given credentials are no longer valid or
-        // 2) there was a network error
-    }];
-}
-
-- (void) loadAssessmentItemsExample {
-    BCStudentsRepository *repository = [BCStudentsRepository instance];
-
-    // Loading the registered results makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
-    [repository loadAssessmentItemResults:[BCAssessment assessmentWithId:@"456"]
-                                  student:self.student
-                                  success:^(NSArray *assessmentItemResults) {
-                                      // Given is an NSArray of BCAssessmentItemResults, do with it whatever you like
-                                      // At this point you can hide the progress indicator.
-                                  }
-                                  failure:^(NSError *error, BOOL loginFailure) {
-                                      // Saving the result failed. This could happen when:
-                                      // 1) the given credentials are no longer valid or
-                                      // 2) there was a network error
-                                  }];
-}
-
 - (void) loginButtonTapped {
     studentPickerController = [BCStudentPickerController new];
     studentPickerController.studentPickerDelegate = self;
@@ -129,6 +90,43 @@
     self.student = student;
     loggedInStudentLabel.text = [NSString stringWithFormat:@"%@ (%@)", student.fullName, student.group.name];
     [loginButton setTitle:@"Change" forState:UIControlStateNormal];
+
+    // TODO: Implement some buttons in MyCoolEduApp to test the load and save functionality of result items.
+//    [self testSaveAssessmentItemResult];
+    [self testLoadAssessmentItemResults];
+}
+
+- (void) testLoadAssessmentItemResults {
+    NSString *assessmentId = @"1";
+    NSLog(@"Performing loadAssessmentItemResults for student \"%@\" with assessment id %@", self.student.fullName, assessmentId);
+    [[BCStudentsRepository instance] loadAssessmentItemResults:[BCAssessment assessmentWithId:assessmentId]
+                                                       student:self.student success:^(NSArray *assessmentItemResults) {
+        NSLog(@"SUCCESS! Loaded %i assessment item results for assessmentId = %@", [assessmentItemResults count], assessmentId);
+    } failure:^(NSError *error, BOOL loginFailure) {
+        NSLog(@"ERROR: Failed to perform loadAssessmentItemResults: %@", error);
+    }];
+}
+
+- (void) testSaveAssessmentItemResult {
+    BCStudentsRepository *repository = [BCStudentsRepository instance];
+    BCAssessmentItemResult *result = [BCAssessmentItemResult new];
+    result.student = self.student;
+    result.questionId = @"1";
+    result.assessment = [BCAssessment assessmentWithId:@"1"];
+    result.attempts = 2;
+    result.duration = 5;
+    result.completionStatus = BCCompletionStatusCompleted;
+    result.score = 10;
+
+    // Saving an assessment makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
+    [repository saveAssessmentItemResult:result success:^{
+        // Saving the assessment item was successful!
+        // At this point you can hide the progress indicator.
+    } failure:^(NSError *error, BOOL loginFailure) {
+        // Saving the result failed. This could happen when:
+        // 1) the given credentials are no longer valid or
+        // 2) there was a network error
+    }];
 }
 
 @end
