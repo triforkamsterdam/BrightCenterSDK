@@ -66,7 +66,7 @@
         NSArray *groupsJson = json;
         NSMutableArray *groups = [NSMutableArray new];
         for (NSDictionary *groupJson in groupsJson) {
-            NSString *id = [groupJson[@"id"] description]; // description converts the value to NSString if necessary
+            NSString *id = groupJson[@"id"];
             NSString *name = groupJson[@"name"];
             NSString *schoolId = groupJson[@"schoolId"];
             BCGroup *group = [BCGroup groupWithId:id name:name schoolId:schoolId];
@@ -76,7 +76,7 @@
             for (NSDictionary *studentJson in studentsJson) {
                 NSString *firstName = studentJson[@"firstName"];
                 NSString *lastName = studentJson[@"lastName"];
-                NSString *studentId = [studentJson[@"studentId"] description]; // description converts the value to NSString if necessary
+                NSString *studentId = studentJson[@"studentId"];
                 [group addStudent:[BCStudent studentWithId:studentId group:group firstName:firstName lastName:lastName]];
             }
         }
@@ -87,33 +87,40 @@
 }
 
 - (void) loadUserDetails:(void (^)(BCUserAccount *userAccount)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
-    if (![self repositoryIsFullyConfigured]) {
-        return;
-    }
+    NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
+                                                    path:@"/userDetails"
+                                              parameters:nil];
 
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        // TODO: Replace sleep + static data with call to backend
-        [NSThread sleepForTimeInterval:1.0];
-        dispatch_queue_t mainQueue = dispatch_get_main_queue();
-        dispatch_sync(mainQueue, ^{
-            if ([self invalidDummyCredentials]) {
-                if (failure) {
-                    failure(nil, YES);
-                }
-                return;
-            }
-            BCUserAccount *userAccount = [BCUserAccount new];
-            userAccount.fullName = @"Tom van Zummeren";
-            success(userAccount);
-        });
-    });
+    void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
+        NSString *id = json[@"id"];
+        NSString *firstName = json[@"firstName"];
+        NSString *lastName = json[@"lastName"];
+        NSString *roleString = json[@"role"];
+
+        BCRole role = BCRoleUnknown;
+        if ([@"TEACHER" isEqualToString:roleString]) {
+            role = BCRoleTeacher;
+        } else if ([@"ADMIN" isEqualToString:roleString]) {
+            role = BCRoleAdmin;
+        } else if ([@"APP_DEVELOPER" isEqualToString:roleString]) {
+            role = BCRoleAppDeveloper;
+        }
+
+        BCUserAccount *account = [BCUserAccount accountWithId:id
+                                                    firstName:firstName
+                                                     lastName:lastName
+                                                         role:role];
+        success(account);
+    };
+    [[AFJSONRequestOperation JSONRequestOperationWithRequest:urlRequest success:httpSuccess
+                                                     failure:[self createHttpFailureCallback:failure]] start];
 }
 
-- (void) saveAssessmentItemResult:(BCAssessmentItemResult *) result success:(void (^)()) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
-    if (![self repositoryIsFullyConfigured]) {
-        return;
-    }
+- (void) saveAssessmentItemResult:(BCAssessmentItemResult *) result
+                          success:
+                                  (void (^)()) success
+                          failure:
+                                  (void (^)(NSError *error, BOOL loginFailure)) failure {
     BCAssessmentItemResult *resultToRemove = nil;
     for (BCAssessmentItemResult *savedResult in savedAssessmentItemResults) {
         if ([savedResult hasSameQuestionAndStudent:result]) {
@@ -144,10 +151,13 @@
     });
 }
 
-- (void) loadAssessmentItemResults:(BCAssessment *) assessment student:(BCStudent *) student success:(void (^)(NSArray *assessmentItemResults)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
-    if (![self repositoryIsFullyConfigured]) {
-        return;
-    }
+- (void) loadAssessmentItemResults:(BCAssessment *) assessment
+                           student:
+                                   (BCStudent *) student
+                           success:
+                                   (void (^)(NSArray *assessmentItemResults)) success
+                           failure:
+                                   (void (^)(NSError *error, BOOL loginFailure)) failure {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         // TODO: Replace sleep + static data with call to backend
@@ -169,15 +179,6 @@
 
 - (BOOL) invalidDummyCredentials {
     return ![@"leraar" isEqualToString:self.credentials.username];
-}
-
-- (BOOL) repositoryIsFullyConfigured {
-    if (!self.credentials) {
-        NSLog(@"ERROR: Missing credentials. Did you log in first using BCSTudentPickerController? Set credentials manually setting them: "
-                "[BCStudentsRepository instance].credentials = [BCCredentials credentialsWithUsername:@\"username\" password:@\"password\"]");
-        return NO;
-    }
-    return YES;
 }
 
 - (void (^)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id)) createHttpFailureCallback:(void (^)(NSError *, BOOL)) failure {
