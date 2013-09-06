@@ -6,10 +6,15 @@
 #import "BCAssessmentItemResult.h"
 #import "BCAssessment.h"
 
+#define SANDBOX_URL @"http://tst-brightcenter.trifork.nl/"
+//#define PRODUCTION_URL @"does not exist yet"
+
 @implementation BCStudentsRepository {
 
     // TODO: Remove this array when assessment item results are stored in the backend
     NSMutableArray *savedAssessmentItemResults;
+
+    NSString *baseUrl;
 }
 
 + (BCStudentsRepository *) instance {
@@ -23,10 +28,15 @@
     return _instance;
 }
 
+- (void) configureForSandbox {
+    baseUrl = SANDBOX_URL;
+}
+
 - (id) init {
     self = [super init];
     if (self) {
         savedAssessmentItemResults = [NSMutableArray new];
+        baseUrl = SANDBOX_URL;
     }
     return self;
 }
