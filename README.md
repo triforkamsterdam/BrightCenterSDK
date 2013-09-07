@@ -67,6 +67,15 @@ The protocol requires you to implement one simple method:
 After the above method is called, the student picker automatically closes and you can let the chosen student do the exercises you want.
 After a student completed an exercise (in Bright Center this is called an assessment item) you have to let Bright Center know.
 
+## Using the API directly (without UI)
+
+Using the `BCStudentsRepository` you can access the BrightCenter API directly. You can always get the shared (singleton) instance of `BCStudentsRepository` like this:
+
+```objective-c
+BCStudentsRepository *repository = [BCStudentsRepository instance];
+```
+
+### Registering a new assessment item result
 This is how you register the result of an assessment item:
 
 ```objective-c
@@ -80,7 +89,7 @@ result.duration = 5;
 result.completionStatus = BCCompletionStatusCompleted;
 result.score = 10;
 
-// Saving an assessment makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
+// Saving an assessment makes a call to the backend, so it could take a second. It is wise to display an activity indicator.
 [repository saveAssessmentItemResult:result success:^{
     // Saving the assessment item was successful!
     // At this point you can hide the progress indicator.
@@ -91,12 +100,13 @@ result.score = 10;
 }];
 ```
 
+### Loading all registered item results for an assessment
 When you later on need to load all the assessment item results that were registered in Bright Center for a given assessment and student:
 
 ```objective-c
     BCStudentsRepository *repository = [BCStudentsRepository instance];
 
-    // Loading the registered results makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
+    // Loading the registered results makes a call to the backend, so it could take a second. It is wise to display an activity indicator.
     [repository loadAssessmentItemResults:[BCAssessment assessmentWithId:@"456"]
                                   student:self.student
                                   success:^(NSArray *assessmentItemResults) {
