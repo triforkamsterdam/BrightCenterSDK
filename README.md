@@ -40,8 +40,6 @@ studentPickerController.studentPickerDelegate = self;
 [self presentViewController:studentPickerController animated:YES completion:nil];
 ```
 
-NOTE: When asked for a username and password, use "leraar" and leave the password field empty.
-
 As you can see it assigns the controller (self) as the delegate. For this to work you have to conform to the `BCStudentPickerControllerDelegate` protocol as follows:
 
 ```objective-c
@@ -111,4 +109,4 @@ Get the dependencies by running `pod install`.
 
 Open the generated BrightCenterSDK.xcworkspace in XCode or AppCode (instead of BrightCenterSDK.xcodeproj)
 
-Run the project in the iPad Simulator or on an actual iPad. For now no connection to the backend is made. Login with "leraar" with no password to access the dummy content.
+Run the project in the iPad Simulator or on an actual iPad.
