@@ -29,6 +29,15 @@ Go to your XCode project directory and create a text file called `PodFile` with 
 Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
 Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
 
+### Configure the environment you want to use
+
+If you want to use the BrightCenter test-server at http://tst-brightcenter.trifork.nl put this line in your `AppDelegate`
+```objective-c
+[[BCStudentsRepository instance] configureForSandbox];
+```
+
+At the moment of writing the production environment is not yet ready. When it is, the SDK will be updated and you will be able to call `configureForProduction` instead.
+
 ### Login to Bright Center from your app
 
 The SDK contains some screens that will log you into Bright Center and choose a student from a list of groups, right out-of-the-box.
