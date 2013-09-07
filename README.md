@@ -4,7 +4,7 @@ Use this SDK to make it easy to communicate with the Bright Center backend. Also
 login to Bright Center and select students from a list of groups.
 
 Requirements:
-- iPad
+- iPad only (for now)
 - iOS 5, iOS 6 or iOS 7
 
 ## Install cocoapods
