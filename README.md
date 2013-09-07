@@ -3,9 +3,9 @@
 Use this SDK to make it easy to communicate with the Bright Center backend. Also it contains the student picker which helps you
 login to Bright Center and select students from a list of groups.
 
-Side note: at this moment there are some UI glitches when using iOS 7, but Cocoapods doesn't let me use iOS 7 specific code
-yet. This will be possible when iOS 7 is released. When iOS 7 is released we will update this SDK as soon as possible to
-fix the glitches.
+Requirements:
+- iPad
+- iOS 5+
 
 ## Install cocoapods
 
