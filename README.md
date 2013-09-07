@@ -5,7 +5,7 @@ login to Bright Center and select students from a list of groups.
 
 Requirements:
 - iPad
-- iOS 5+
+- iOS 5, iOS 6 or iOS 7
 
 ## Install cocoapods
 
