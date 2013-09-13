@@ -32,8 +32,6 @@
     if (self) {
         // TODO: When production server is ready, change this default to configureForProduction.
         [self configureForSandbox];
-        // TODO: Remove this when the backend is repaired and never returns text/plain JSON anymore
-        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"text/plain", nil]];
     }
     return self;
 }
@@ -53,7 +51,7 @@
 
 - (void) loadGroupsAndStudents:(void (^)(NSArray *groups)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
-                                                    path:@"/groups"
+                                                    path:@"/api/groups"
                                               parameters:nil];
 
     void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
@@ -70,7 +68,7 @@
             for (NSDictionary *studentJson in studentsJson) {
                 NSString *firstName = studentJson[@"firstName"];
                 NSString *lastName = studentJson[@"lastName"];
-                NSString *studentId = studentJson[@"studentId"];
+                NSString *studentId = studentJson[@"id"];
                 [group addStudent:[BCStudent studentWithId:studentId group:group firstName:firstName lastName:lastName]];
             }
         }
@@ -84,7 +82,7 @@
 
 - (void) loadUserDetails:(void (^)(BCUserAccount *userAccount)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
-                                                    path:@"/userDetails"
+                                                    path:@"/api/userDetails"
                                               parameters:nil];
 
     void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
@@ -125,7 +123,7 @@
         return;
     }
 
-    NSString *path = [NSString stringWithFormat:@"/assessment/%@/student/%@/assessmentItemResult/%@", result.assessment.id, result.student.id, result.questionId];
+    NSString *path = [NSString stringWithFormat:@"/api/assessment/%@/student/%@/assessmentItemResult/%@", result.assessment.id, result.student.id, result.questionId];
 
     NSString *completionStatusString = @"UNKNOWN";
     if (result.completionStatus == BCCompletionStatusCompleted) {
@@ -136,15 +134,18 @@
         completionStatusString = @"NOT_ATTEMPTED";
     }
 
-    // TODO: Technically this should be a PUT. One problem: the backend ignores the parameters when using PUT... Change this into PUT whenever the backend is ready for it
-    NSURLRequest *urlRequest = [client requestWithMethod:@"POST"
+    NSDictionary *requestJson = @{
+            @"score" : @(result.score),
+            @"duration" : @(result.duration),
+            @"attempts" : @(result.attempts),
+            @"completionStatus" : completionStatusString
+    };
+    NSMutableURLRequest *urlRequest = [client requestWithMethod:@"PUT"
                                                     path:path
-                                              parameters:@{
-                                                      @"score" : @(result.score),
-                                                      @"duration" : @(result.duration),
-                                                      @"attempts" : @(result.attempts),
-                                                      @"completionStatus" : completionStatusString
-                                              }];
+                                              parameters:nil];
+    urlRequest.HTTPBody = [NSJSONSerialization dataWithJSONObject:requestJson options:0 error:nil];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+
 
     void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
         if (success) {
@@ -166,7 +167,7 @@
         NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: student.id cannot be nil");
         return;
     }
-    NSString *path = [NSString stringWithFormat:@"/assessment/%@/students/%@/assessmentItemResult", assessment.id, student.id];
+    NSString *path = [NSString stringWithFormat:@"/api/assessment/%@/students/%@/assessmentItemResult", assessment.id, student.id];
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
                                                     path:path
                                               parameters:nil];
@@ -198,6 +199,8 @@
             result.score = score;
             result.completionStatus = completionStatus;
             result.date = date;
+            result.student = student;
+            result.assessment = assessment;
             [results addObject:result];
         }
 
@@ -211,8 +214,7 @@
 
 - (void (^)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id)) createHttpFailureCallback:(void (^)(NSError *, BOOL)) failure {
     void (^httpFailure)(NSURLRequest *, NSHTTPURLResponse *, NSError *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id o) {
-        // TODO: Backend should return a 401 status code instead of a redirect. Remove the "text/html" check once the backend properly responds this way.
-        BOOL loginFailed = [response.allHeaderFields[@"Content-Type"] hasPrefix:@"text/html"] || response.statusCode == 401;
+        BOOL loginFailed = response.statusCode == 401;
         NSLog(@"ERROR - BCStudentsRepository: request failed: %@", error);
         if (failure) {
             failure(error, loginFailed);

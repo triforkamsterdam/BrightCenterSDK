@@ -30,4 +30,14 @@
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
+- (NSString *) description {
+    NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+    [description appendFormat:@"self.id=%@", self.id];
+    [description appendFormat:@", self.group=%@", self.group];
+    [description appendFormat:@", self.firstName=%@", self.firstName];
+    [description appendFormat:@", self.lastName=%@", self.lastName];
+    [description appendString:@">"];
+    return description;
+}
+
 @end

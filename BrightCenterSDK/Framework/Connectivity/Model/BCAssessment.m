@@ -17,4 +17,11 @@
     return [[self alloc] initWithId:id];
 }
 
+- (NSString *) description {
+    NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: ", NSStringFromClass([self class])];
+    [description appendFormat:@"self.id=%@", self.id];
+    [description appendString:@">"];
+    return description;
+}
+
 @end
