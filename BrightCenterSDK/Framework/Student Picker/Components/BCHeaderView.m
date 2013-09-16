@@ -13,6 +13,7 @@
         titleLabel = [UILabel new];
         [self addSubview:titleLabel];
         titleLabel.font = [UIFont systemFontOfSize:24.0];
+        titleLabel.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

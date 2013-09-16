@@ -34,6 +34,7 @@
 
         self.rightView = clearButton;
         self.rightViewMode = UITextFieldViewModeWhileEditing;
+        self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     }
     return self;
 }
