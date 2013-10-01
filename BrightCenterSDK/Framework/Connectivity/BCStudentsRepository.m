@@ -7,6 +7,7 @@
 #import "BCAssessment.h"
 #import "AFHTTPClient.h"
 #import "AFJSONRequestOperation.h"
+#import "NSObject+JsonUtils.h"
 
 #define SANDBOX_URL @"https://tst-brightcenter.trifork.nl"
 //#define PRODUCTION_URL @"does not exist yet"
@@ -176,11 +177,11 @@
         NSMutableArray *results = [NSMutableArray new];
         NSArray *resultsJson = json;
         for (NSDictionary *resultJson in resultsJson) {
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:[resultJson[@"date"] longLongValue] / 1000];
+            NSDate *date = [resultJson[@"date"] jsonDateValue];
             NSString *questionId = resultJson[@"questionId"];
-            CGFloat duration = [resultJson[@"duration"] floatValue];
-            NSInteger score = [resultJson[@"score"] intValue];
-            NSInteger attempts = [resultJson[@"attempts"] intValue];
+            CGFloat duration = [resultJson[@"duration"] jsonFloatValue];
+            NSInteger score = [resultJson[@"score"] jsonIntegerValue];
+            NSInteger attempts = [resultJson[@"attempts"] jsonIntegerValue];
             NSString *completionStatusString = resultJson[@"completionStatus"];
             BCCompletionStatus completionStatus = BCCompletionStatusUnknown;
 

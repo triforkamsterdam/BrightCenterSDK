@@ -36,6 +36,7 @@
 		5F50E9E610E445D0D0651944 /* bc_avatar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F50EEDE532927FD6E31B703 /* bc_avatar@2x.png */; };
 		5F50EA06CFFE27B05D4A1630 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F50EB2F6ADF295499D75504 /* XCTest.framework */; };
 		5F50EA2F8F5B791CC34D69DF /* bc_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F50E9B0FED151C5B0C00C77 /* bc_logo.png */; };
+		5F50EA66561118A64B67817A /* NSObject+JsonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F50E04713BC039C2980C75C /* NSObject+JsonUtils.m */; };
 		5F50EA6C3A24575D82015451 /* BCSplitController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F50E049EEF6147BBFCE6FCE /* BCSplitController.m */; };
 		5F50EB6E5A5104936472EFB2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F50E6D4783F7C1F03F15B70 /* Foundation.framework */; };
 		5F50ECF2228F61437F469CB9 /* BCGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F50E5068AF6A8EC0840E86B /* BCGroup.m */; };
@@ -74,6 +75,7 @@
 		077B5FDFEFE548A697F6338D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F50E0030FDF8C9BFBCF24CD /* bc_password_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bc_password_icon@2x.png"; sourceTree = "<group>"; };
 		5F50E02834322B3A034CB6A8 /* bc_password_icon_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bc_password_icon_active.png; sourceTree = "<group>"; };
+		5F50E04713BC039C2980C75C /* NSObject+JsonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JsonUtils.m"; sourceTree = "<group>"; };
 		5F50E049EEF6147BBFCE6FCE /* BCSplitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCSplitController.m; sourceTree = "<group>"; };
 		5F50E04DBAA4ADF333A68228 /* BCHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCHeaderView.h; sourceTree = "<group>"; };
 		5F50E06E3F8FA4516B236E01 /* BCTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCTableCell.h; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 		5F50EAB710867FBB3D4C4A15 /* BCLogo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCLogo.h; sourceTree = "<group>"; };
 		5F50EAD4F1C40CD9282666F9 /* BCStudentsRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCStudentsRepository.h; sourceTree = "<group>"; };
 		5F50EAFF55A323940531F23B /* BrightCenterSDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrightCenterSDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F50EB057F14ED3596334A02 /* NSObject+JsonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JsonUtils.h"; sourceTree = "<group>"; };
 		5F50EB1C3C874232BBA91DDD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5F50EB2F6ADF295499D75504 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		5F50EB8BF7649C29DBF62DAA /* BCTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCTableCell.m; sourceTree = "<group>"; };
@@ -385,6 +388,8 @@
 				5F50E75210A92BA6B1B40873 /* BCStudentsRepository.m */,
 				5F50EAD4F1C40CD9282666F9 /* BCStudentsRepository.h */,
 				5F50EDD7DF72EB67ACD7B84F /* Model */,
+				5F50E04713BC039C2980C75C /* NSObject+JsonUtils.m */,
+				5F50EB057F14ED3596334A02 /* NSObject+JsonUtils.h */,
 			);
 			path = Connectivity;
 			sourceTree = "<group>";
@@ -565,6 +570,7 @@
 				5F50EFD3BFCC68865293A452 /* BCCredentials.m in Sources */,
 				5F50E23716262758AF9290B8 /* BCAssessmentItemResult.m in Sources */,
 				5F50E19006EAAFC31473A90F /* BCAssessment.m in Sources */,
+				5F50EA66561118A64B67817A /* NSObject+JsonUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
