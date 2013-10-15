@@ -111,13 +111,11 @@
 }
 
 - (void) keyboardWillShow:(NSNotification *) notification {
-    NSLog(@"will show");
     keyboardShowing = YES;
     [self positionLoginView:YES];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
-    NSLog(@"will hide");
     keyboardShowing = NO;
     [self positionLoginView:YES];
 }
