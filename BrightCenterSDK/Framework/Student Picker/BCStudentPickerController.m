@@ -46,6 +46,10 @@
 - (void) loggedOut:(NSNotification *) notification {
     BCNavigationBar *navigationBar = (BCNavigationBar *) self.navigationBar;
     [navigationBar hideLoggedInUserMenu];
+
+    if ([self.studentPickerDelegate respondsToSelector:@selector(loggedOut)]) {
+        [self.studentPickerDelegate loggedOut];
+    }
 }
 
 - (void) studentPicked:(NSNotification *) notification {

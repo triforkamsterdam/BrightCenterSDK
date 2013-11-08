@@ -96,6 +96,10 @@
     [self testLoadAssessmentItemResults];
 }
 
+- (void) loggedOut {
+    loggedInStudentLabel.text = @"";
+}
+
 - (void) testLoadAssessmentItemResults {
     NSString *assessmentId = @"1";
     NSLog(@"Performing loadAssessmentItemResults for student \"%@\" with assessment id %@", self.student.fullName, assessmentId);

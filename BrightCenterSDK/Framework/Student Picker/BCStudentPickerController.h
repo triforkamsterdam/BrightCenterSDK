@@ -3,6 +3,8 @@
 static NSString *const BCStudentPickedNotification = @"BCStudentPickedNotification";
 
 @protocol BCStudentPickerControllerDelegate <NSObject>
+@optional
+- (void) loggedOut;
 @required
 - (void) studentPicked:(BCStudent *) student;
 @end
