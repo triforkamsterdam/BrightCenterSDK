@@ -3,6 +3,8 @@
 #import "BCStudentListController.h"
 #import "BCLoggedInUserView.h"
 #import "BCLoginController.h"
+#import "BCStudentsRepository.h"
+#import "BCCredentials.h"
 
 #define GROUP_LIST_WIDTH 320.0
 
@@ -72,6 +74,10 @@
 
 - (void) doLogOut:(NSNotification *) notification {
     [[NSNotificationCenter defaultCenter] postNotificationName:BCLoggedOutNotification object:nil];
+
+    BCStudentsRepository *repository = [BCStudentsRepository instance];
+    repository.credentials.invalid = YES;
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
