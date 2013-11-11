@@ -24,7 +24,7 @@ See also: http://cocoapods.org
 Go to your XCode project directory and create a text file called `PodFile` with the following contents:
 
     platform :ios, '5.0'
-    pod 'BrightCenterSDK', '~> 1.1.3'
+    pod 'BrightCenterSDK', '~> 1.1.4'
 
 Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
 Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
@@ -63,8 +63,15 @@ The protocol requires you to implement one simple method:
     // Also you can use it right now to display the name of this student somewhere in your app.
 }
 ```
-
 After the above method is called, the student picker automatically closes and you can let the chosen student do the exercises you want.
+
+Optionally you can implement the logout method:
+```objective-c
+- (void) loggedOut{
+    //Use this to log out in your app if necessary
+}
+```
+
 After a student completed an exercise (in Bright Center this is called an assessment item) you have to let Bright Center know.
 
 ## Using the API directly (without UI)
