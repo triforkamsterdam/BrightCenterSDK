@@ -24,7 +24,7 @@ See also: http://cocoapods.org
 Go to your XCode project directory and create a text file called `PodFile` with the following contents:
 
     platform :ios, '5.0'
-    pod 'BrightCenterSDK', '~> 1.1.4'
+    pod 'BrightCenterSDK', '~> 1.2'
 
 Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
 Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
@@ -91,7 +91,6 @@ BCAssessmentItemResult *result = [BCAssessmentItemResult new];
 result.student = self.student;
 result.questionId = @"123";
 result.assessment = [BCAssessment assessmentWithId:@"456"];
-result.attempts = 2;
 result.duration = 5;
 result.completionStatus = BCCompletionStatusCompleted;
 result.score = 10;
