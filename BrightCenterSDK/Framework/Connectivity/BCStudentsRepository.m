@@ -138,7 +138,6 @@
     NSDictionary *requestJson = @{
             @"score" : @(result.score),
             @"duration" : @(result.duration),
-            @"attempts" : @(result.attempts),
             @"completionStatus" : completionStatusString
     };
     NSMutableURLRequest *urlRequest = [client requestWithMethod:@"PUT"
