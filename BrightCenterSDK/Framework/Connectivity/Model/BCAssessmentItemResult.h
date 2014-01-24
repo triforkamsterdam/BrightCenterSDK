@@ -15,7 +15,7 @@ typedef enum {
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, copy) NSString *questionId;
 
-@property (nonatomic) NSInteger score;
+@property (nonatomic) CGFloat score;
 @property (nonatomic) CGFloat duration;
 @property (nonatomic) NSInteger attempts;
 @property (nonatomic) BCCompletionStatus completionStatus;

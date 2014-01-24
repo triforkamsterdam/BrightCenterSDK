@@ -92,8 +92,8 @@
     [loginButton setTitle:@"Change" forState:UIControlStateNormal];
 
     // TODO: Implement some buttons in MyCoolEduApp to test the load and save functionality of result items.
-//    [self testSaveAssessmentItemResult];
-    [self testLoadAssessmentItemResults];
+   [self testSaveAssessmentItemResult];
+    //[self testLoadAssessmentItemResults];
 }
 
 - (void) loggedOut {
@@ -120,7 +120,7 @@
     result.attempts = 2;
     result.duration = 5;
     result.completionStatus = BCCompletionStatusCompleted;
-    result.score = 10;
+    result.score = 0.8;
 
     // Saving an assessment makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
     [repository saveAssessmentItemResult:result success:^{

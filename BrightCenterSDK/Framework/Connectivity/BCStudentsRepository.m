@@ -179,7 +179,7 @@
             NSDate *date = [resultJson[@"date"] jsonDateValue];
             NSString *questionId = resultJson[@"questionId"];
             CGFloat duration = [resultJson[@"duration"] jsonFloatValue];
-            NSInteger score = [resultJson[@"score"] jsonIntegerValue];
+            CGFloat score = [resultJson[@"score"] jsonFloatValue];
             NSInteger attempts = [resultJson[@"attempts"] jsonIntegerValue];
             NSString *completionStatusString = resultJson[@"completionStatus"];
             BCCompletionStatus completionStatus = BCCompletionStatusUnknown;
