@@ -4,6 +4,7 @@
 #import "BCAssessment.h"
 #import "BCStudentsRepository.h"
 #import "BCAssessmentItemResult.h"
+#import "BCButtonLogo.h"
 
 #define TITLE_HEIGHT 50.0
 #define VERTICAL_MARGIN 30.0
@@ -20,11 +21,8 @@
 
     UILabel *titleLabel;
 
-    UIButton *loginButton;
-
     UILabel *loggedInStudentLabel;
-
-    BCStudentPickerController *studentPickerController;
+    
 }
 
 - (void) viewDidLoad {
@@ -44,21 +42,12 @@
     loggedInStudentLabel.font = [UIFont systemFontOfSize:30.0];
     loggedInStudentLabel.textAlignment = NSTextAlignmentCenter;
 
-    loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.view addSubview:loginButton];
-    [loginButton setTitle:@"Connect" forState:UIControlStateNormal];
-    loginButton.titleLabel.font = [UIFont systemFontOfSize:30.0];
 
-    [loginButton addTarget:self action:@selector(loginButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-}
+    [self addOverlayButtonWithColor:1 andPosition:1];
+    [self addOverlayButtonWithColor:2 andPosition:2];
+    [self addOverlayButtonWithColor:3 andPosition:3];
+    [self addOverlayButtonWithColor:4 andPosition:4];
 
-- (void) loginButtonTapped {
-    studentPickerController = [BCStudentPickerController new];
-    studentPickerController.studentPickerDelegate = self;
-
-    if (studentPickerController) {
-        [self presentViewController:studentPickerController animated:YES completion:nil];
-    }
 }
 
 - (void) viewWillLayoutSubviews {
@@ -72,15 +61,10 @@
             IMAGE_WIDTH, IMAGE_HEIGHT);
 
     titleLabel.frame = CGRectMake(0.0, rect.size.height / 2.0 - TITLE_HEIGHT, rect.size.width, TITLE_HEIGHT);
-
-    loginButton.frame = CGRectMake(
-            (rect.size.width / 2.0) - (BUTTON_WIDTH / 2.0),
-            titleLabel.frame.origin.y + titleLabel.frame.size.height + VERTICAL_MARGIN,
-            BUTTON_WIDTH, LOGIN_BUTTON_HEIGHT);
-
+   
     loggedInStudentLabel.frame = CGRectMake(
             0.0,
-            loginButton.frame.origin.y + loginButton.frame.size.height,
+            titleLabel.frame.origin.y + titleLabel.frame.size.height,
             rect.size.width, TITLE_HEIGHT);
 }
 
@@ -89,7 +73,6 @@
 - (void) studentPicked:(BCStudent *) student {
     self.student = student;
     loggedInStudentLabel.text = [NSString stringWithFormat:@"%@ (%@)", student.fullName, student.group.name];
-    [loginButton setTitle:@"Change" forState:UIControlStateNormal];
 
     // TODO: Implement some buttons in MyCoolEduApp to test the load and save functionality of result items.
    [self testSaveAssessmentItemResult];
@@ -121,7 +104,6 @@
     result.duration = 5;
     result.completionStatus = BCCompletionStatusCompleted;
     result.score = 0.8;
-
     // Saving an assessment makes a call to the backend, so it could take a second. It is wise to display a progress indicator.
     [repository saveAssessmentItemResult:result success:^{
         // Saving the assessment item was successful!
@@ -131,6 +113,72 @@
         // 1) the given credentials are no longer valid or
         // 2) there was a network error
     }];
+}
+
+
+- (void) addOverlayButtonWithColor: (int) color andPosition: (int) position{
+    UIColor *logoColor;
+    switch (color) {
+        case 1:
+            logoColor =[UIColor colorWithRed:244 / 255.0 green:126 / 255.0 blue:43 / 255.0 alpha:1.0];
+            break;
+        case 2:
+            //blue
+            logoColor = [UIColor colorWithRed:0 / 255.0 green:156 / 255.0 blue:250 / 255.0 alpha:1.0];
+            break;
+        case 3:
+            //grey
+            logoColor = [UIColor colorWithRed:77 / 255.0 green:77 / 255.0 blue:77 / 255.0 alpha:1.0];
+            break;
+            
+        default:
+            logoColor = [UIColor colorWithRed:244 / 255.0 green:126 / 255.0 blue:43 / 255.0 alpha:1.0];
+            break;
+    }
+    
+    BCButtonLogo *backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor];
+    [self.view addSubview:backgroundView];
+    CGSize size = self.view.frame.size;
+    CGFloat logoSize = MIN(size.width, size.height) * 0.25;
+    
+    int x = 0;
+    int y = 0;
+    
+    switch (position) {
+        case 1:
+            x = (logoSize * 1.1) - logoSize;
+            y = (logoSize * 1.1) - logoSize;
+            break;
+        case 2:
+            x = size.width - (logoSize * 1.1);
+            y = (logoSize * 1.1) - logoSize;
+            break;
+        case 3:
+            x = (logoSize * 1.1) - logoSize;
+            y = size.height - (logoSize * 1.1);
+            break;
+        case 4:
+            x = size.width - (logoSize * 1.1);
+            y = size.height - (logoSize * 1.1);
+            break;
+            
+        default:
+            x = size.width - (logoSize * 1.1);
+            y = size.height - (logoSize * 1.1);
+            break;
+    }
+
+    backgroundView.frame = CGRectMake(x, y, logoSize, logoSize);
+    backgroundView.bcButtonClickedDelegate = self;
+
+}
+
+- (void) bcButtonIsClicked{
+    BCStudentPickerController *studentPickerController = [BCStudentPickerController new];
+    studentPickerController.studentPickerDelegate = self;
+    if (studentPickerController) {
+        [self presentViewController:studentPickerController animated:YES completion:nil];
+    }
 }
 
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D73FAD018A5126500875461 /* BCButtonLogo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D73FACF18A5126500875461 /* BCButtonLogo.m */; };
 		5F50E0564AE09FE08A892F64 /* BCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F50E204BABC8E4A718FFCDF /* BCTextField.m */; };
 		5F50E13AC91A4E533765EAFA /* BrightCenterSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F50E4F6CC723C92F623BDE0 /* BrightCenterSDKTests.m */; };
 		5F50E19006EAAFC31473A90F /* BCAssessment.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F50EE4F9D1C7114F201B134 /* BCAssessment.m */; };
@@ -73,6 +74,8 @@
 
 /* Begin PBXFileReference section */
 		077B5FDFEFE548A697F6338D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D73FACE18A5126500875461 /* BCButtonLogo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BCButtonLogo.h; path = "Overlay Button/BCButtonLogo.h"; sourceTree = "<group>"; };
+		1D73FACF18A5126500875461 /* BCButtonLogo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BCButtonLogo.m; path = "Overlay Button/BCButtonLogo.m"; sourceTree = "<group>"; };
 		5F50E0030FDF8C9BFBCF24CD /* bc_password_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bc_password_icon@2x.png"; sourceTree = "<group>"; };
 		5F50E02834322B3A034CB6A8 /* bc_password_icon_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bc_password_icon_active.png; sourceTree = "<group>"; };
 		5F50E04713BC039C2980C75C /* NSObject+JsonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JsonUtils.m"; sourceTree = "<group>"; };
@@ -180,6 +183,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D73FACA18A5059A00875461 /* Overlay Button */ = {
+			isa = PBXGroup;
+			children = (
+				1D73FACE18A5126500875461 /* BCButtonLogo.h */,
+				1D73FACF18A5126500875461 /* BCButtonLogo.m */,
+			);
+			name = "Overlay Button";
+			sourceTree = "<group>";
+		};
 		5F50E018BDC4459C6FEA913E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,6 +286,7 @@
 		5F50E77A995BFF199E3CAC3F /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				1D73FACA18A5059A00875461 /* Overlay Button */,
 				5F50EE2ED632130E5CDB2F31 /* Connectivity */,
 				5F50E9A3A31F0641FFDA0296 /* Student Picker */,
 			);
@@ -547,6 +560,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F50EEA01ECB0FE4724475DB /* main.m in Sources */,
+				1D73FAD018A5126500875461 /* BCButtonLogo.m in Sources */,
 				5F50EFD60BFBB3D0AD0F88BE /* AppDelegate.m in Sources */,
 				5F50E48244969B0C127F1FB6 /* MyCoolEduAppController.m in Sources */,
 				5F50EF8ACEF7D2A636E75DE6 /* BCStudentsRepository.m in Sources */,
