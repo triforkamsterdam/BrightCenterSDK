@@ -108,6 +108,8 @@ You also need to make your viewcontroller a delegate of `BCStudentPickerControll
 ```objective-c
 @interface MyCoolEduAppController : UIViewController <BCStudentPickerControllerDelegate, BCButtonLogoClickedDelegate>
 ```
+In your code you can call `addOverlayButtonWithColor: (int) color andPosition: (int) position` to show the button.
+The number color stands for the following: 1 for orange, 2 for blue and 3 for grey. The positions are as follows: 1 for top left corner, 2 for top right corner, 3 for bottom left corner and 4 for bottom right corner.
 
 
 
