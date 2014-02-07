@@ -38,7 +38,80 @@ If you want to use the BrightCenter test-server at http://tst-brightcenter.trifo
 
 At the moment of writing the production environment is not yet ready. When it is, the SDK will be updated and you will be able to call `configureForProduction` instead.
 
-### Login to Bright Center from your app
+###Using the brightcenter login button
+We've created a nice button which you can implement in your code so you dont have to implement the studentPicker yourself. Add the following code to the viewcontroller in which you want to add the button:
+
+```objective-c
+- (void) addOverlayButtonWithColor: (int) color andPosition: (int) position{
+    UIColor *logoColor;
+    switch (color) {
+        case 1:
+            logoColor =[UIColor colorWithRed:244 / 255.0 green:126 / 255.0 blue:43 / 255.0 alpha:1.0];
+            break;
+        case 2:
+            //blue
+            logoColor = [UIColor colorWithRed:0 / 255.0 green:156 / 255.0 blue:250 / 255.0 alpha:1.0];
+            break;
+        case 3:
+            //grey
+            logoColor = [UIColor colorWithRed:77 / 255.0 green:77 / 255.0 blue:77 / 255.0 alpha:1.0];
+            break;
+        default:
+            logoColor = [UIColor colorWithRed:244 / 255.0 green:126 / 255.0 blue:43 / 255.0 alpha:1.0];
+            break;
+    }
+    
+    BCButtonLogo *backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor];
+    [self.view addSubview:backgroundView];
+    CGSize size = self.view.frame.size;
+    CGFloat logoSize = MIN(size.width, size.height) * 0.25;
+    
+    int x = 0;
+    int y = 0;
+    
+    switch (position) {
+        case 1:
+            x = (logoSize * 1.1) - logoSize;
+            y = (logoSize * 1.1) - logoSize;
+            break;
+        case 2:
+            x = size.width - (logoSize * 1.1);
+            y = (logoSize * 1.1) - logoSize;
+            break;
+        case 3:
+            x = (logoSize * 1.1) - logoSize;
+            y = size.height - (logoSize * 1.1);
+            break;
+        case 4:
+            x = size.width - (logoSize * 1.1);
+            y = size.height - (logoSize * 1.1);
+            break;
+            
+        default:
+            x = size.width - (logoSize * 1.1);
+            y = size.height - (logoSize * 1.1);
+            break;
+    }
+
+    backgroundView.frame = CGRectMake(x, y, logoSize, logoSize);
+    backgroundView.bcButtonClickedDelegate = self;
+}
+- (void) bcButtonIsClicked{
+    BCStudentPickerController *studentPickerController = [BCStudentPickerController new];
+    studentPickerController.studentPickerDelegate = self;
+    if (studentPickerController) {
+        [self presentViewController:studentPickerController animated:YES completion:nil];
+    }
+}
+```
+You also need to make your viewcontroller a delegate of `BCStudentPickerControllerDelegate` and `BCButtonLogoClickedDelegate`. You can do that as follows:
+```objective-c
+@interface MyCoolEduAppController : UIViewController <BCStudentPickerControllerDelegate, BCButtonLogoClickedDelegate>
+```
+
+
+
+### Login to Bright Center from your app(Manually)
 
 The SDK contains some screens that will log you into Bright Center and choose a student from a list of groups, right out-of-the-box.
 To open the login screen / student picker, present `BCStudentPickerController` as a modal view controller:
