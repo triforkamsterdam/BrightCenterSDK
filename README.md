@@ -1,6 +1,6 @@
-# BrightCenter SDK
+# Brightcenter SDK
 
-Use this SDK to make it easy to communicate with the Bright Center backend. Also it contains the student picker which helps you
+Use this SDK to make it easy to communicate with the Brightcenter backend. Also it contains the student picker which helps you
 login to Bright Center and select students from a list of groups.
 
 Requirements:
@@ -31,7 +31,7 @@ Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of Yo
 
 ### Configure the environment you want to use
 
-If you want to use the BrightCenter test-server at http://tst-brightcenter.trifork.nl put this line in your `AppDelegate`
+If you want to use the Brightcenter test-server at http://tst-brightcenter.trifork.nl put this line in your `AppDelegate`
 ```objective-c
 [[BCStudentsRepository instance] configureForSandbox];
 ```
@@ -151,7 +151,7 @@ After a student completed an exercise (in Bright Center this is called an assess
 
 ## Using the API directly (without UI)
 
-Using the `BCStudentsRepository` you can access the BrightCenter API directly. You can always get the shared (singleton) instance of `BCStudentsRepository` like this:
+Using the `BCStudentsRepository` you can access the Brightcenter API directly. You can always get the shared (singleton) instance of `BCStudentsRepository` like this:
 
 ```objective-c
 BCStudentsRepository *repository = [BCStudentsRepository instance];
