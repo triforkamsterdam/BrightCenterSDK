@@ -1,7 +1,7 @@
 # Brightcenter SDK
 
 Use this SDK to make it easy to communicate with the Brightcenter backend. Also it contains the student picker which helps you
-login to Bright Center and select students from a list of groups.
+login to Brightcenter and select students from a list of groups.
 
 Requirements:
 - iPad only (for now)
@@ -113,9 +113,9 @@ The number color stands for the following: 1 for orange, 2 for blue and 3 for gr
 
 
 
-### Login to Bright Center from your app(Manually)
+### Login to Brightcenter from your app(Manually)
 
-The SDK contains some screens that will log you into Bright Center and choose a student from a list of groups, right out-of-the-box.
+The SDK contains some screens that will log you into Brightcenter and choose a student from a list of groups, right out-of-the-box.
 To open the login screen / student picker, present `BCStudentPickerController` as a modal view controller:
 
 ```objective-c
@@ -147,7 +147,7 @@ Optionally you can implement the logout method:
 }
 ```
 
-After a student completed an exercise (in Bright Center this is called an assessment item) you have to let Bright Center know.
+After a student completed an exercise (in Brightcenter this is called an assessment item) you have to let Brightcenter know.
 
 ## Using the API directly (without UI)
 
@@ -182,7 +182,7 @@ result.score = 10;
 ```
 
 ### Loading all registered item results for an assessment
-When you later on need to load all the assessment item results that were registered in Bright Center for a given assessment and student:
+When you later on need to load all the assessment item results that were registered in Brightcenter for a given assessment and student:
 
 ```objective-c
     BCStudentsRepository *repository = [BCStudentsRepository instance];
@@ -207,6 +207,6 @@ This is basically it! If you have any questions, don't hasitate to contact me.
 
 Get the dependencies by running `pod install`.
 
-Open the generated BrightCenterSDK.xcworkspace in XCode or AppCode (instead of BrightCenterSDK.xcodeproj)
+Open the generated BrightcenterSDK.xcworkspace in XCode or AppCode (instead of BrightcenterSDK.xcodeproj)
 
 Run the project in the iPad Simulator or on an actual iPad.
