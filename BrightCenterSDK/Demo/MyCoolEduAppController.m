@@ -130,7 +130,6 @@
             //grey
             logoColor = [UIColor colorWithRed:77 / 255.0 green:77 / 255.0 blue:77 / 255.0 alpha:1.0];
             break;
-            
         default:
             logoColor = [UIColor colorWithRed:244 / 255.0 green:126 / 255.0 blue:43 / 255.0 alpha:1.0];
             break;
