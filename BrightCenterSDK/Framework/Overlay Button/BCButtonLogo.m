@@ -13,12 +13,16 @@
 
 @implementation BCButtonLogo{
     UIColor *color;
+    int positionX;
+    int positionY;
 }
 
-- (id) initWithColor:(UIColor *) aColor {
+- (id) initWithColor:(UIColor *) aColor andPositionX:(int) myPositionX andPositionY:(int)myPositionY{
     self = [super init];
     if (self) {
         color = aColor;
+        positionX = myPositionX;
+        positionY = myPositionY;
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
     }
@@ -26,7 +30,11 @@
 }
 
 - (void) drawRect:(CGRect) rect {
-    CGFloat logoSize = MIN(rect.size.width, rect.size.height);
+    CGFloat logoSize = MIN(rect.size.width / 2.5, rect.size.height / 2.5);
+    
+
+    
+    [self drawCircleInRect:rect lineWidth:logoSize + 30 size:logoSize positionX: positionX andPositionY:positionY];
     
     [color setStroke];
     
@@ -37,7 +45,24 @@
     [self drawOvalInRect:rect
                lineWidth:logoSize * INNER_CIRCLE_LINE_WIDTH
                     size:logoSize * .66 - (logoSize * INNER_CIRCLE_LINE_WIDTH)];
+    
 }
+
+
+-(void) drawCircleInRect:(CGRect) rect lineWidth:(CGFloat) lineWidth size:(CGFloat) size positionX: (int) myPositionX andPositionY:(int) myPositionY {
+    CGRect ovalRect2 = CGRectMake(
+                                  rect.origin.x + myPositionX,
+                                  rect.origin.y + myPositionY,
+                                  size*1.6,size*1.6
+                                  );
+    UIBezierPath *ovalPath2 = [UIBezierPath bezierPathWithOvalInRect:ovalRect2];
+    ovalPath2.lineWidth = lineWidth;
+    UIColor *circleColor = [UIColor whiteColor];
+    [circleColor setStroke];
+    [ovalPath2 stroke];
+}
+
+
 
 - (void) drawOvalInRect:(CGRect) rect lineWidth:(CGFloat) lineWidth size:(CGFloat) size {
     CGRect ovalRect2 = CGRectMake(

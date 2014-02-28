@@ -15,7 +15,7 @@
 
 @interface BCButtonLogo : UIView
 
-- (id) initWithColor:(UIColor *) aColor;
+- (id) initWithColor:(UIColor *) aColor andPositionX:(int) positionX andPositionY:(int) positionY;
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 
