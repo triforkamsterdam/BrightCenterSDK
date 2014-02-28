@@ -132,6 +132,16 @@ You also need to make your viewcontroller a delegate of `BCStudentPickerControll
 In your code you can call `addOverlayButtonWithColor: (int) color andPosition: (int) position` to show the button.
 The number color stands for the following: 1 for orange, 2 for blue and 3 for grey. The positions are as follows: 1 for top left corner, 2 for top right corner, 3 for bottom left corner and 4 for bottom right corner.
 
+The protocol also requires you to implement one simple method:
+
+```objective-c
+- (void) studentPicked:(BCStudent *) student {
+    // Save the student object for later. It is needed later to register assessment item results for this student.
+    // Also you can use it right now to display the name of this student somewhere in your app.
+}
+```
+After the above method is called, the student picker automatically closes and you can let the chosen student do the exercises you want.
+
 
 
 ### Login to Brightcenter from your app(Manually)
@@ -150,16 +160,6 @@ As you can see it assigns the controller (self) as the delegate. For this to wor
 ```objective-c
 @interface MyCoolEduAppController : UIViewController <BCStudentPickerControllerDelegate>
 ```
-
-The protocol requires you to implement one simple method:
-
-```objective-c
-- (void) studentPicked:(BCStudent *) student {
-    // Save the student object for later. It is needed later to register assessment item results for this student.
-    // Also you can use it right now to display the name of this student somewhere in your app.
-}
-```
-After the above method is called, the student picker automatically closes and you can let the chosen student do the exercises you want.
 
 Optionally you can implement the logout method:
 ```objective-c
