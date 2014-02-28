@@ -1,7 +1,7 @@
 # Brightcenter SDK
 
 Use this SDK to make it easy to communicate with the Brightcenter backend. Also it contains the student picker which helps you
-login to Bright Center and select students from a list of groups.
+login to Brightcenter and select students from a list of groups.
 
 Requirements:
 - iPad only (for now)
@@ -61,41 +61,62 @@ We've created a nice button which you can implement in your code so you dont hav
             break;
     }
     
-    BCButtonLogo *backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor];
-    [self.view addSubview:backgroundView];
     CGSize size = self.view.frame.size;
-    CGFloat logoSize = MIN(size.width, size.height) * 0.25;
-    
+    CGFloat logoSize = MIN(size.width / 3, size.height / 3) * 0.5;
+
     int x = 0;
     int y = 0;
     
+    double margin = 0.8;
+    int posX = 0;
+    int posY = 0;
+    int trans = logoSize / 3;
     switch (position) {
         case 1:
-            x = (logoSize * 1.1) - logoSize;
-            y = (logoSize * 1.1) - logoSize;
+            x = (logoSize * margin) - logoSize;
+            y = (logoSize * margin) - logoSize;
+            posX = 4;
+            posY = 4;
             break;
         case 2:
-            x = size.width - (logoSize * 1.1);
-            y = (logoSize * 1.1) - logoSize;
+            x = size.width - (logoSize * margin);
+            y = (logoSize * margin) - logoSize;
+            posX = trans;
+            posY = 4;
             break;
         case 3:
-            x = (logoSize * 1.1) - logoSize;
-            y = size.height - (logoSize * 1.1);
+            x = (logoSize * margin) - logoSize;
+            y = size.height - (logoSize * margin);
+            posX= 0;
+            posY = trans;
             break;
         case 4:
-            x = size.width - (logoSize * 1.1);
-            y = size.height - (logoSize * 1.1);
+            x = size.width - (logoSize * margin);
+            y = size.height - (logoSize * margin);
+            posX = trans;
+            posY = trans;
             break;
             
         default:
-            x = size.width - (logoSize * 1.1);
-            y = size.height - (logoSize * 1.1);
+            x = size.width - (logoSize * margin);
+            y = size.height - (logoSize * margin);
             break;
     }
-
-    backgroundView.frame = CGRectMake(x, y, logoSize, logoSize);
+    BCButtonLogo *backgroundView;
+    if(UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor andPositionX:posX andPositionY:posY];
+        [self.view addSubview:backgroundView];
+        
+        backgroundView.frame = CGRectMake(x, y, logoSize, logoSize);
+    } else if(UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
+        backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor andPositionX:posY andPositionY:posX];
+        [self.view addSubview:backgroundView];
+        
+        backgroundView.frame = CGRectMake(y, x, logoSize, logoSize);
+    }
     backgroundView.bcButtonClickedDelegate = self;
 }
+
 - (void) bcButtonIsClicked{
     BCStudentPickerController *studentPickerController = [BCStudentPickerController new];
     studentPickerController.studentPickerDelegate = self;
@@ -111,11 +132,21 @@ You also need to make your viewcontroller a delegate of `BCStudentPickerControll
 In your code you can call `addOverlayButtonWithColor: (int) color andPosition: (int) position` to show the button.
 The number color stands for the following: 1 for orange, 2 for blue and 3 for grey. The positions are as follows: 1 for top left corner, 2 for top right corner, 3 for bottom left corner and 4 for bottom right corner.
 
+The protocol also requires you to implement one simple method:
+
+```objective-c
+- (void) studentPicked:(BCStudent *) student {
+    // Save the student object for later. It is needed later to register assessment item results for this student.
+    // Also you can use it right now to display the name of this student somewhere in your app.
+}
+```
+After the above method is called, the student picker automatically closes and you can let the chosen student do the exercises you want.
 
 
-### Login to Bright Center from your app(Manually)
 
-The SDK contains some screens that will log you into Bright Center and choose a student from a list of groups, right out-of-the-box.
+### Login to Brightcenter from your app(Manually)
+
+The SDK contains some screens that will log you into Brightcenter and choose a student from a list of groups, right out-of-the-box.
 To open the login screen / student picker, present `BCStudentPickerController` as a modal view controller:
 
 ```objective-c
@@ -130,16 +161,6 @@ As you can see it assigns the controller (self) as the delegate. For this to wor
 @interface MyCoolEduAppController : UIViewController <BCStudentPickerControllerDelegate>
 ```
 
-The protocol requires you to implement one simple method:
-
-```objective-c
-- (void) studentPicked:(BCStudent *) student {
-    // Save the student object for later. It is needed later to register assessment item results for this student.
-    // Also you can use it right now to display the name of this student somewhere in your app.
-}
-```
-After the above method is called, the student picker automatically closes and you can let the chosen student do the exercises you want.
-
 Optionally you can implement the logout method:
 ```objective-c
 - (void) loggedOut{
@@ -147,7 +168,7 @@ Optionally you can implement the logout method:
 }
 ```
 
-After a student completed an exercise (in Bright Center this is called an assessment item) you have to let Bright Center know.
+After a student completed an exercise (in Brightcenter this is called an assessment item) you have to let Brightcenter know.
 
 ## Using the API directly (without UI)
 
@@ -182,7 +203,7 @@ result.score = 10;
 ```
 
 ### Loading all registered item results for an assessment
-When you later on need to load all the assessment item results that were registered in Bright Center for a given assessment and student:
+When you later on need to load all the assessment item results that were registered in Brightcenter for a given assessment and student:
 
 ```objective-c
     BCStudentsRepository *repository = [BCStudentsRepository instance];
@@ -207,6 +228,6 @@ This is basically it! If you have any questions, don't hasitate to contact me.
 
 Get the dependencies by running `pod install`.
 
-Open the generated BrightCenterSDK.xcworkspace in XCode or AppCode (instead of BrightCenterSDK.xcodeproj)
+Open the generated BrightcenterSDK.xcworkspace in XCode or AppCode (instead of BrightcenterSDK.xcodeproj)
 
 Run the project in the iPad Simulator or on an actual iPad.
