@@ -61,41 +61,62 @@ We've created a nice button which you can implement in your code so you dont hav
             break;
     }
     
-    BCButtonLogo *backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor];
-    [self.view addSubview:backgroundView];
     CGSize size = self.view.frame.size;
-    CGFloat logoSize = MIN(size.width, size.height) * 0.25;
-    
+    CGFloat logoSize = MIN(size.width / 3, size.height / 3) * 0.5;
+
     int x = 0;
     int y = 0;
     
+    double margin = 0.8;
+    int posX = 0;
+    int posY = 0;
+    int trans = logoSize / 3;
     switch (position) {
         case 1:
-            x = (logoSize * 1.1) - logoSize;
-            y = (logoSize * 1.1) - logoSize;
+            x = (logoSize * margin) - logoSize;
+            y = (logoSize * margin) - logoSize;
+            posX = 4;
+            posY = 4;
             break;
         case 2:
-            x = size.width - (logoSize * 1.1);
-            y = (logoSize * 1.1) - logoSize;
+            x = size.width - (logoSize * margin);
+            y = (logoSize * margin) - logoSize;
+            posX = trans;
+            posY = 4;
             break;
         case 3:
-            x = (logoSize * 1.1) - logoSize;
-            y = size.height - (logoSize * 1.1);
+            x = (logoSize * margin) - logoSize;
+            y = size.height - (logoSize * margin);
+            posX= 0;
+            posY = trans;
             break;
         case 4:
-            x = size.width - (logoSize * 1.1);
-            y = size.height - (logoSize * 1.1);
+            x = size.width - (logoSize * margin);
+            y = size.height - (logoSize * margin);
+            posX = trans;
+            posY = trans;
             break;
             
         default:
-            x = size.width - (logoSize * 1.1);
-            y = size.height - (logoSize * 1.1);
+            x = size.width - (logoSize * margin);
+            y = size.height - (logoSize * margin);
             break;
     }
-
-    backgroundView.frame = CGRectMake(x, y, logoSize, logoSize);
+    BCButtonLogo *backgroundView;
+    if(UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor andPositionX:posX andPositionY:posY];
+        [self.view addSubview:backgroundView];
+        
+        backgroundView.frame = CGRectMake(x, y, logoSize, logoSize);
+    } else if(UIInterfaceOrientationIsLandscape(self.interfaceOrientation)){
+        backgroundView = [[BCButtonLogo alloc] initWithColor:logoColor andPositionX:posY andPositionY:posX];
+        [self.view addSubview:backgroundView];
+        
+        backgroundView.frame = CGRectMake(y, x, logoSize, logoSize);
+    }
     backgroundView.bcButtonClickedDelegate = self;
 }
+
 - (void) bcButtonIsClicked{
     BCStudentPickerController *studentPickerController = [BCStudentPickerController new];
     studentPickerController.studentPickerDelegate = self;
