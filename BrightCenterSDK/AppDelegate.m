@@ -17,7 +17,7 @@
     // In iOS7 this doesn't work. Instead each controller decides whether to hide the status bar
     application.statusBarHidden = YES;
 
-    [[BCStudentsRepository instance] configureForSandbox];
+    [[BCStudentsRepository instance] configureForProduction];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];

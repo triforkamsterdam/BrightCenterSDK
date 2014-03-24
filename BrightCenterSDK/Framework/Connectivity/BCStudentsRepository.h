@@ -10,7 +10,7 @@
 
 + (BCStudentsRepository *) instance;
 
-- (void) configureForSandbox;
+- (void) configureForProduction;
 
 - (void) loadGroupsAndStudents:(void (^)(NSArray *groups)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure;
 

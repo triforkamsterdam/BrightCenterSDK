@@ -9,8 +9,7 @@
 #import "AFJSONRequestOperation.h"
 #import "NSObject+JsonUtils.h"
 
-#define SANDBOX_URL @"https://tst-brightcenter.trifork.nl"
-//#define PRODUCTION_URL @"does not exist yet"
+#define PRODUCTION_URL @"http://www.brightcenter.nl/dashboard/"
 
 @implementation BCStudentsRepository {
 
@@ -32,7 +31,7 @@
     self = [super init];
     if (self) {
         // TODO: When production server is ready, change this default to configureForProduction.
-        [self configureForSandbox];
+        [self configureForProduction];
     }
     return self;
 }
@@ -42,13 +41,9 @@
     [client setAuthorizationHeaderWithUsername:credentials.username password:credentials.password];
 }
 
-- (void) configureForSandbox {
-    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:SANDBOX_URL]];
+- (void) configureForProduction {
+    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:PRODUCTION_URL]];
 }
-
-//- (void) configureForProduction {
-//    client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:PRODUCTION_URL]];
-//}
 
 - (void) loadGroupsAndStudents:(void (^)(NSArray *groups)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
