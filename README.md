@@ -29,14 +29,12 @@ Go to your XCode project directory and create a text file called `PodFile` with 
 Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
 Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
 
-### Configure the environment you want to use
+### Configure the environment 
 
-If you want to use the Brightcenter test-server at http://tst-brightcenter.trifork.nl put this line in your `AppDelegate`
+Pput this line in your `AppDelegate` to use the Brightcenter production environment
 ```objective-c
 [[BCStudentsRepository instance] configureForSandbox];
 ```
-
-At the moment of writing the production environment is not yet ready. When it is, the SDK will be updated and you will be able to call `configureForProduction` instead.
 
 ###Using the brightcenter login button
 We've created a nice button which you can implement in your code so you dont have to implement the studentPicker yourself. Add the following code to the viewcontroller in which you want to add the button:
