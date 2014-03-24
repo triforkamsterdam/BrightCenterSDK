@@ -9,7 +9,7 @@
 #import "AFJSONRequestOperation.h"
 #import "NSObject+JsonUtils.h"
 
-#define PRODUCTION_URL @"http://www.brightcenter.nl/dashboard/"
+#define PRODUCTION_URL @"http://www.brightcenter.nl"
 
 @implementation BCStudentsRepository {
 
@@ -47,7 +47,7 @@
 
 - (void) loadGroupsAndStudents:(void (^)(NSArray *groups)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
-                                                    path:@"/api/groups"
+                                                    path:@"/dashboard/api/groups"
                                               parameters:nil];
 
     void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
@@ -78,7 +78,7 @@
 
 - (void) loadUserDetails:(void (^)(BCUserAccount *userAccount)) success failure:(void (^)(NSError *error, BOOL loginFailure)) failure {
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
-                                                    path:@"/api/userDetails"
+                                                    path:@"/dashboard/api/userDetails"
                                               parameters:nil];
 
     void (^httpSuccess)(NSURLRequest *, NSHTTPURLResponse *, id) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id json) {
@@ -119,7 +119,7 @@
         return;
     }
 
-    NSString *path = [NSString stringWithFormat:@"/api/assessment/%@/student/%@/assessmentItemResult/%@", result.assessment.id, result.student.id, result.questionId];
+    NSString *path = [NSString stringWithFormat:@"/dashboard/api/assessment/%@/student/%@/assessmentItemResult/%@", result.assessment.id, result.student.id, result.questionId];
 
     NSString *completionStatusString = @"UNKNOWN";
     if (result.completionStatus == BCCompletionStatusCompleted) {
@@ -162,7 +162,7 @@
         NSLog(@"ERROR - BCStudentsRepository.loadAssessmentItemResults: student.id cannot be nil");
         return;
     }
-    NSString *path = [NSString stringWithFormat:@"/api/assessment/%@/students/%@/assessmentItemResult", assessment.id, student.id];
+    NSString *path = [NSString stringWithFormat:@"/dashboard/api/assessment/%@/students/%@/assessmentItemResult", assessment.id, student.id];
     NSURLRequest *urlRequest = [client requestWithMethod:@"GET"
                                                     path:path
                                               parameters:nil];
