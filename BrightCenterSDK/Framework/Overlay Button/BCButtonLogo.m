@@ -30,7 +30,7 @@
 }
 
 - (void) drawRect:(CGRect) rect {
-    CGFloat logoSize = MIN(rect.size.width / 2.5, rect.size.height / 2.5);
+    CGFloat logoSize = MIN(rect.size.width / 2.7, rect.size.height / 2.7);
     
 
     
