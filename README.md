@@ -21,13 +21,13 @@ See also: http://cocoapods.org
 
 ## To integrate this SDK into your educational app
 
-Go to your XCode project directory and create a text file called `PodFile` with the following contents:
+Go to your Xcode project directory and create a text file called `PodFile` with the following contents:
 
     platform :ios, '5.0'
     pod 'BrightCenterSDK', '~> 1.2'
 
-Now open a terminal and change to your XCode project directory. Run the command `pod install`. That's it!
-Open the generated YourApp.xcworkspace file with XCode or AppCode (instead of YourApp.xcodeproj).
+Now open a terminal and change to your Xcode project directory. Run the command `pod install`. That's it!
+Open the generated YourApp.xcworkspace file with Xcode or AppCode (instead of YourApp.xcodeproj).
 
 ### Configure the environment 
 
@@ -226,6 +226,6 @@ This is basically it! If you have any questions, don't hasitate to contact me.
 
 Get the dependencies by running `pod install`.
 
-Open the generated BrightcenterSDK.xcworkspace in XCode or AppCode (instead of BrightcenterSDK.xcodeproj)
+Open the generated BrightcenterSDK.xcworkspace in Xcode or AppCode (instead of BrightcenterSDK.xcodeproj)
 
 Run the project in the iPad Simulator or on an actual iPad.
